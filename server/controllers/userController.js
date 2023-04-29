@@ -149,7 +149,88 @@ module.exports = {
 
     getCourses: async(req,res,next)=>{
         try {
+            const Nationality = req.body.selectedNationality
+            const data = await feeModel.aggregate([
+                {
+                    $project: {
+                      ExamFeeArray: { $objectToArray: "$EXAMFEE" }
+                    }
+                },
+            ])
+
+            const dataModified = data[0].ExamFeeArray
             
+
+            const arr = []
+            const AllCourses = []
+
+            dataModified.map((data)=>{
+                if(data.k === Nationality){
+                    arr.push(data)
+                    const hasAllCourses = arr.every(obj => obj.v.hasOwnProperty('ALL_COURSES'));
+                    if(hasAllCourses){
+                        AllCourses.push('Medical','Dental','Ayurvedic')
+                    }
+                }
+            })
+
+            res.send({
+                success:true,
+                message:'Allcourses array returned',
+                data:AllCourses
+            })
+            
+            
+        } catch (error) {
+            return res.send({
+                success:false,
+                message:'something went wrong'
+            })
+        }
+    },
+
+    getCourseLevels : async(req,res,next) => {
+        try {
+            const selectedCourse = req.body.selectedCourse
+            const data = await feeModel.aggregate([
+                {
+                    $project: {
+                      ExamFeeArray: { $objectToArray: "$EXAMFEE" }
+                    }
+                },
+            ])
+
+            const dataModified = data[0].ExamFeeArray
+
+            const allLevel = ['UG','PG','Ph.D','Diploma']
+
+            res.send({
+                success:true,
+                message:'All levels fetched successFully',
+                data:allLevel
+            })
+
+        } catch (error) {
+            return res.send({
+                success:false,
+                message:'something went wrong'
+            })
+        }
+    },
+
+    getResultingAmount : async(req,res,next) => {
+        try {
+            console.log(req.body)
+            const data = await feeModel.aggregate([
+                {
+                    $project: {
+                      ExamFeeArray: { $objectToArray: "$EXAMFEE" }
+                    }
+                },
+            ])
+
+            const dataModified = data[0].ExamFeeArray
+
         } catch (error) {
             return res.send({
                 success:false,
