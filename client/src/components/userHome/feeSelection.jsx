@@ -13,10 +13,12 @@ function FeeSelection() {
     const [nationality,setNationality] = useState([])
     const [courses,setCourses] = useState([])
     const [levels,setLevels] = useState([])
+    const [resultingAmount,setResultingAmount] = useState('0')
 
     useEffect(()=>{
         const fetchData = async() => {
             const response = await getFees()
+            
             if(response.success){
                 setFees(response.data)
             }
@@ -71,12 +73,16 @@ function FeeSelection() {
             }
 
             const response = await getResultingamount(data)
-
+            console.log(response)
+            if(response.success){
+                setResultingAmount(response.data)
+            }
         }else{
             setSelectedLevel(' ')
         }
     }
     
+    console.log(resultingAmount)
 
   return (
     <>
@@ -162,7 +168,7 @@ function FeeSelection() {
 
             <div className='coursesDiv'>
                 <div className='flex justify-center pt-2 font-medium'>
-                    <p className='font-medium'>Resulting amount is : 0/-</p>
+                    <p className='font-medium'>Resulting amount is : {resultingAmount}/-</p>
                 </div>
             </div>
 
