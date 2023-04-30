@@ -1,0 +1,16 @@
+.divwrapperOwner{
+    background-image: url('https://c4.wallpaperflare.com/wallpaper/935/849/231/background-tree-book-wallpaper-preview.jpg');
+    background-size: 100% 100%;
+    @apply
+    bg-slate-900
+    w-full
+    h-full
+    p-20
+}
+
+.ownerLoginformdiv{
+    @apply
+    w-full
+    h-full
+    mt-10
+}

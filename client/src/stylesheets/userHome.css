@@ -1,0 +1,28 @@
+.mainDivHome{
+    @apply
+    w-full 
+    h-screen
+    bg-slate-300
+}
+
+.mainDivFee{
+    @apply
+    w-full
+    h-32
+    bg-slate-300
+}
+
+.nationalitiesDiv{
+    @apply
+    w-full
+    h-24
+    bg-slate-300
+    mt-8
+}
+
+.coursesDiv{
+    @apply
+    w-full
+    h-24
+    bg-slate-300
+}
