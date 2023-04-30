@@ -231,13 +231,10 @@ module.exports = {
 
             const dataModified = data[0].ExamFeeArray
 
-            console.log(dataModified)
-
             const resultingAmount = []
 
             dataModified.map((data)=>{
                 if(data.k === req.body.nationality){
-                    console.log(data.v.ALL_COURSES);
                     const hasAllCourses = data.v.hasOwnProperty('ALL_COURSES');
                     if(hasAllCourses){
                         const hasAllLevels = data.v.ALL_COURSES.hasOwnProperty('ALL_LEVEL')
@@ -247,8 +244,6 @@ module.exports = {
                     }
                 }
             })
-
-            console.log(resultingAmount[0]);
 
             res.send({
                 success:true,

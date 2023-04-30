@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from 'react'
 import { fetchCourses, getCourseLevels, getFees, getNationalities, getResultingamount } from '../../axios/user/user'
 import '../../stylesheets/userHome.css'
+import toast from 'react-hot-toast'
 
 function FeeSelection() {
 
     const [selectedValue,setSelectedValue] = useState('')
-    const [selectedNationality,setSelectedNationality] = useState('')
-    const [selectedCourse,setSelectedCourse] = useState('')
-    const [selectedLevel,setSelectedLevel] = useState('')
+    const [selectedNationality,setSelectedNationality] = useState(null)
+    const [selectedCourse,setSelectedCourse] = useState(null)
+    const [selectedLevel,setSelectedLevel] = useState(null)
 
     const [fees,setFees] = useState([])
     const [nationality,setNationality] = useState([])
     const [courses,setCourses] = useState([])
     const [levels,setLevels] = useState([])
     const [resultingAmount,setResultingAmount] = useState('0')
+    // const [options,setOptions] = useState(false)
 
     useEffect(()=>{
         const fetchData = async() => {
@@ -27,6 +29,9 @@ function FeeSelection() {
     },[])
 
     const handleChange = async(e) => {
+        if(selectedNationality || selectedCourse || selectedLevel !== null){
+            return toast.error('Uncheck all the other fields to change fees')
+        }
         setSelectedValue(e.target.value)
         const selectedFee = e.target.value 
         const response = await getNationalities({selectedFee})
@@ -38,6 +43,9 @@ function FeeSelection() {
 
     const handleCheck = async(e) => {
         const { checked } = e.target;
+        if(selectedCourse || selectedLevel !== null){
+            return toast.error('Please uncheck course or course level')
+        }
         if(checked){
             setSelectedNationality(e.target.value)
             const response = await fetchCourses({selectedNationality:e.target.value})
@@ -45,13 +53,16 @@ function FeeSelection() {
                 setCourses(response.data)
             }
         }else{
-            setSelectedNationality(' ')
+            setSelectedNationality(null)
         }
         
     }
 
     const handleCourse = async(e) => {
         const { checked } = e.target;
+        if(selectedNationality === null){
+            return toast.error('select nationality first')
+        }
         if(checked){
             setSelectedCourse(e.target.value)
             const response = await getCourseLevels({selectedCourse:e.target.value})
@@ -59,30 +70,30 @@ function FeeSelection() {
                 setLevels(response.data)
             }
         }else{
-            setSelectedCourse(' ')
+            setSelectedCourse(null)
         }
     }
 
     const handleLevel = async(e) => {
         const { checked } = e.target;
         if(checked){
+            setSelectedLevel(e.target.value)
             const data = {
                 nationality:selectedNationality,
                 course:selectedCourse,
                 level:e.target.value
             }
-
             const response = await getResultingamount(data)
             console.log(response)
             if(response.success){
                 setResultingAmount(response.data)
             }
         }else{
-            setSelectedLevel(' ')
+            setSelectedLevel(null)
+            setResultingAmount('0')
         }
     }
     
-    console.log(resultingAmount)
 
   return (
     <>
@@ -115,7 +126,7 @@ function FeeSelection() {
                         return<>
                         <li>
                         <label className='text-lg' >
-                        <input className='w-8' type="checkbox" id={name} name="nationality" value={name} onClick={handleCheck}/>
+                        <input className='w-8' type="checkbox" id={name} name="options" value={name} onClick={handleCheck}/>
                         {name}
                         </label>
                         </li>
@@ -136,7 +147,7 @@ function FeeSelection() {
                         {courses.map((course)=>(
                         <li>
                         <label className='text-lg' >
-                        <input className='w-8' type="checkbox" name="course" value={course} onClick={handleCourse}/>
+                        <input className='w-8' type="checkbox" name="options" value={course} onClick={handleCourse} disabled={selectedCourse !== null && selectedCourse !== course}/>
                         {course}
                         </label>
                         </li>
@@ -156,7 +167,7 @@ function FeeSelection() {
                         {levels.map((level)=>(
                         <li>
                         <label className='text-lg' >
-                        <input className='w-8' type="checkbox" id="usa" name="courselevel" value="UG" onClick={handleLevel}/>
+                        <input className='w-8' type="checkbox" name="options" value={level} onClick={handleLevel} disabled={selectedLevel !== null && selectedLevel !== level}/>
                         {level}
                         </label>
                         </li>
