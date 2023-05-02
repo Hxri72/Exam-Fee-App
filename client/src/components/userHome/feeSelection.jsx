@@ -43,9 +43,6 @@ function FeeSelection() {
 
     const handleCheck = async(e) => {
         const { checked } = e.target;
-        if(selectedCourse || selectedLevel !== null){
-            return toast.error('Please uncheck course or course level')
-        }
         if(checked){
             setSelectedNationality(e.target.value)
             const response = await fetchCourses({selectedNationality:e.target.value})
@@ -54,6 +51,11 @@ function FeeSelection() {
             }
         }else{
             setSelectedNationality(null)
+            setCourses([])
+            setLevels([])
+            setSelectedCourse(null)
+            setSelectedLevel(null)
+            setResultingAmount('0')
         }
         
     }
@@ -71,6 +73,9 @@ function FeeSelection() {
             }
         }else{
             setSelectedCourse(null)
+            setLevels([])
+            setResultingAmount('0')
+            setSelectedLevel(null)
         }
     }
 
@@ -93,6 +98,8 @@ function FeeSelection() {
             setResultingAmount('0')
         }
     }
+
+    console.log(selectedNationality)
     
 
   return (
@@ -126,7 +133,7 @@ function FeeSelection() {
                         return<>
                         <li>
                         <label className='text-lg' >
-                        <input className='w-8' type="checkbox" id={name} name="options" value={name} onClick={handleCheck}/>
+                        <input className='w-8' type="checkbox" id={name} name="options" value={name} onClick={handleCheck} disabled={Object.keys(national.ExamFee).length > 1 && selectedNationality !== null && selectedNationality !== name}/>
                         {name}
                         </label>
                         </li>

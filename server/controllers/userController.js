@@ -72,7 +72,6 @@ module.exports = {
         try {
             const selectedFee = req.body.selectedFee
             const amount = Number(selectedFee)
-            console.log(amount)
             const Nationality = await feeModel.aggregate([
                 // unwind the Exam Fee object
                 { $unwind: "$EXAMFEE" },
@@ -220,7 +219,6 @@ module.exports = {
 
     getResultingAmount : async(req,res,next) => {
         try {
-            console.log(req.body)
             const data = await feeModel.aggregate([
                 {
                     $project: {
